@@ -1,0 +1,37 @@
+
+{% extends "welcome.html" %}
+
+{% block title %} Login {% endblock %}
+
+
+{% block body %}
+
+<div class="container">
+<br/><br/><br/><br/>
+	<h1>Please Login</h1>
+
+	<br>
+	<form  action="" method="post">
+
+		<div class="md-form">
+
+				<input type="text" id="iputLGEx" class="form-control" name="username" value="{{ request.form.username }}">
+				<label for="inputLGEx">Username</label>
+		</div>
+
+		<div class="md-form">
+				<input type="password" id="inputLGEx" class="form-control" name="password" value="{{ request.form.password }}">
+				<label for="inputLGEx">Password</label>
+		</div>
+
+
+		<input class="btn btn-default" type="submit" value="Login">
+		</form>
+
+		{% if error %}
+		<p class="error"><strong>Error:</strong>{{ error }}</p>
+		{% endif %}
+</div>
+
+
+{% endblock %}
