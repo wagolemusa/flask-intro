@@ -1,13 +1,35 @@
 # import the flask class  from the flask template
-from  flask import Flask, render_template, redirect, url_for, request
+from  flask import Flask, render_template, redirect, url_for, request, session, flash
+from 	functools import wraps
+
 
 # create the application  object
 app = Flask(__name__)
+
+app.secret_key = "my precious"
+
+#login required decorator
+
+def login_required(f):
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		if 'logged_in' in session:
+			return f(*args, **kwargs)
+		else:
+			flash('You need to login first.')
+			return redirect(url_for('login'))
+	return wrap
+
 
 # use decorators  to link the function to  a url
 @app.route('/')
 def index():
 	return render_template("index.html")
+
+@app.route('/profile')
+@login_required
+def profile():
+	return render_template("profile.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -17,9 +39,17 @@ def login():
 		if request.form['username'] != 'admin' or request.form['password'] != 'admin':
 			error = 'Invalid credentials. Please try again.'
 		else:
-			return redirect(url_for('index'))
+			session['logged_in'] = True
+			flash('You were just logged in')
+			return redirect(url_for('profile'))
 	return render_template('login.html', error=error)
 
+@app.route('/logout')
+@login_required
+def logout():
+	session.pop('logged_in', None)
+	flash('You were just logged out')
+	return redirect(url_for('index'))
 
 #start the server with the  'run()' method
 

@@ -1,15 +1,17 @@
 
 {% extends  "welcome.html" %}
 
-
 {% block title %} Home {% endblock %}
 
+
 {% block body %}
-
-
+<br><br><br/>
 <div class="container">
-<h1>refuge wise</h1>
 
+<h1> Dj refuge wise</h1>
+{% for message in get_flashed_messages() %}
+	{{ message }}
+{% endfor %}
 </div>
 
 {% endblock %}
