@@ -60,11 +60,29 @@
 
         </nav>
 
-      {% block body %}
-      {% endblock %}
+ <div class="container">
+ <!-- child template  -->
+ {% block body %}{% endblock %}
 
 
 
+<!-- errors -->
+
+{% if error %}
+
+    <p class="error"><strong>Error:</strong> {{ error }}</p>
+
+{% endif %}
+
+<!-- message -->
+
+
+{% for message in  get_flashed_messages () %}
+    {{ message }}
+{% endfor %}
+
+
+</div>
 
 
 <!--Footer-->
