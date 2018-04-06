@@ -1,12 +1,16 @@
 # import the flask class  from the flask template
-from  flask import Flask, render_template, redirect, url_for, request, session, flash
-from 	functools import wraps
+from  flask import Flask, render_template, redirect, \
+	url_for, request, session, flash, g
+from 	functools import wraps # Authontications
+import sqlite3 # importing sqlite3
+
 
 
 # create the application  object
 app = Flask(__name__)
 
 app.secret_key = "my precious"
+app.database = "sample.db" #select database
 
 #login required decorator
 
@@ -23,8 +27,16 @@ def login_required(f):
 
 # use decorators  to link the function to  a url
 @app.route('/')
+@login_required
 def index():
-	return render_template("index.html")
+	#connection to databases
+	g.db = connect_db()
+	cur = g.db.execute('select * from posts')
+	posts = [dict(title=row[0], description=row[1]) for  row in cur.fetchall()]
+	g.db.close()
+	return render_template("index.html", posts=posts)
+
+
 
 @app.route('/profile')
 @login_required
@@ -50,6 +62,11 @@ def logout():
 	session.pop('logged_in', None)
 	flash('You were just logged out')
 	return redirect(url_for('index'))
+
+
+# function which connets database to the application
+def connect_db():
+	return sqlite3.connect(app.database)
 
 #start the server with the  'run()' method
 

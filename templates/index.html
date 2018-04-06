@@ -10,8 +10,14 @@
 
 <h1> Dj refuge wise</h1>
 
+<h3>Posts:</h3>
 
+{% for post in posts %}
+	<strong>Title</strong>{{ post.title }}<br/>
+	<strong>Post:</strong> {{ post.description }}<br/>
+	<br/>
 
+	{% endfor %}
 
 </div>
 
