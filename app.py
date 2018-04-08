@@ -1,6 +1,6 @@
 # import the flask class  from the flask template
 from  flask import Flask, render_template, redirect, \
-	url_for, request, session, flash, g
+		url_for, request, session, flash, g
 from 	functools import wraps # Authontications
 import sqlite3 # importing sqlite3
 
