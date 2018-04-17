@@ -1,6 +1,9 @@
 # import the flask class  from the flask template
 from  flask import Flask, render_template, redirect, \
-		url_for, request, session, flash, g
+		url_for, request, session, flash
+#from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy 
+
 from functools import wraps # Authontications
 import sqlite3 # importing sqlite3
 
@@ -8,7 +11,15 @@ import sqlite3 # importing sqlite3
 app = Flask(__name__)
 
 app.secret_key = "my precious"
-app.database = "sample.db" #select database
+#app.database = "sample.db" #select database
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+#create the  sqlalchemy object
+db = SQLAlchemy(app)
+from models import *
+
 
 #login required decorator
 def login_required(f):
@@ -26,15 +37,7 @@ def login_required(f):
 @app.route('/')
 @login_required
 def index():
-	#connection to databases
-	g.db = connect_db()
-	cur = g.db.execute('select * from posts')
-	posts = []
-	for row in  cur.fetchall():
-		posts.append(dict(title=row[0], description=row[1]))
-	#posts = [dict(title=row[0], description=row[1]) for  row in cur.fetchall()]
-	#print posts
-	g.db.close()
+	posts = db.session.query(BlogPost).all()
 	return render_template("index.html", posts=posts)
 
 
@@ -67,7 +70,7 @@ def logout():
 
 # function which connets database to the application
 def connect_db():
-	return sqlite3.connect(app.database)
+	return sqlite3.connect('posts.db')
 
 #start the server with the  'run()' method
 
