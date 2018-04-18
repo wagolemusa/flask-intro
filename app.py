@@ -8,13 +8,15 @@ from functools import wraps # Authontications
 import sqlite3 # importing sqlite3
 
 # create the application  object
-app = Flask(__name__)
+app = Flask(__name__) 
 
-app.secret_key = "my precious"
+#app.secret_key = "my precious"
 #app.database = "sample.db" #select database
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config.from_object('config.BaseConfig')
+#import os
+#app.config.from_object(os.environ['APP_SETTINGS'])
 
 #create the  sqlalchemy object
 db = SQLAlchemy(app)
@@ -75,4 +77,4 @@ def connect_db():
 #start the server with the  'run()' method
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	app.run()
